@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbbedf1c85c453943b5a74f9a41ba1f5, type: 3}
+  m_Name: smp_sample
+  m_EditorClassIdentifier: 
+  characterName: sample_NPC
+  profileImage:
+    m_AssetGUID: 344ee4c358af5784aad93ba53ea1d264
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  chatID: ae30dd_sample_NPC
+  mugiChapters:
+  - {fileID: -492053818911416697, guid: a29ffffe4576b714bae66ae413e434f6, type: 3}
+  - {fileID: -492053818911416697, guid: 4d2457f083e157e4da4185f4a3a8b386, type: 3}

@@ -1,0 +1,188 @@
+//=====================================
+// TALI CHARACTER - CHAPTER 1
+// The Misunderstanding Herb
+//=====================================
+
+contact: sample_b
+
+title: C1_Start
+---
+
+System: "7:05 AM"
+
+NPC: "Good morning! Or... good evening, depending on where you are?"
+NPC: "I just finished harvesting my morning dew."
+
+>> media npc type:image path:sample_b_cg1
+>> media npc type:image path:sample_b_cg1
+
+-> ...
+
+Player: "Morning here! What exactly is 'morning dew' harvesting?"
+Player: "It sounds like something from a fairy tale."
+
+NPC: "It is! We use the dew from the rare Moonpetal flowers for alchemy."
+NPC: "But I wanted to ask you about something strange I saw in your world's 'Net'."
+
+>> choice
+    -> "What did you see?"
+        # Player: "Oh? What did you find on the internet?"
+        <<jump C1_TheHerb>>
+
+    -> "How do you use the internet?"
+        # Player: "Wait, you can browse the web from your world?"
+        <<jump C1_TechTalk>>
+
+===
+
+//=====================================
+// THE HERB PATH
+//=====================================
+
+title: C1_TheHerb
+---
+
+NPC: "I saw a picture of a human eating... **Sacred Glimmerleaf**."
+NPC: "They were putting it on dough with crushed tomatoes and cheese."
+
+>> media npc type:image path:sample_b_cg1
+
+NPC: "Is this true? Do you just... eat our most potent, sacred herb?"
+NPC: "It's supposed to be reserved for rituals and powerful healing potions!"
+
+-> ...
+
+Player: "Oh! You mean **basil**?"
+Player: "Yes, we use it on almost everything—especially pizza."
+
+NPC: "Pizza? This is shocking! It's like grinding up a relic and sprinkling it on bread!"
+
+>> choice
+    -> "It tastes great!"
+        # Player: "It's delicious! It has a slightly peppery, sweet taste."
+        <<jump C1_TaliTries>>
+
+    -> "It's just a common seasoning here."
+        # Player: "To us, it's just a common seasoning herb."
+        <<jump C1_TaliExplains>>
+
+===
+
+//=====================================
+// TECH TALK PATH
+//=====================================
+
+title: C1_TechTalk
+---
+
+NPC: "It's complicated. We have an old, unstable portal that links to a low-tech device in your world."
+NPC: "It mostly lets me see still images and read text—but it's risky."
+
+-> ...
+
+Player: "That's incredible dedication! It must be worth it."
+
+NPC: "It is. It's the only way to learn about your society."
+NPC: "Anyway, it was on there that I saw someone eating **Glimmerleaf**..."
+
+NPC: "They were putting it on dough with crushed tomatoes and cheese. Is this true?"
+NPC: "It's supposed to be reserved for powerful healing potions!"
+
+<<jump C1_TheHerb_Continuation>>
+
+// Helper title to rejoin the flow without repeating the setup
+title: C1_TheHerb_Continuation
+---
+-> ...
+Player: "Oh! You mean **basil**?"
+Player: "Yes, we use it on almost everything—especially pizza."
+NPC: "Pizza? This is shocking! It's like grinding up a relic and sprinkling it on bread!"
+
+>> choice
+    -> "It tastes great!"
+        # Player: "It's delicious! It has a slightly peppery, sweet taste."
+        <<jump C1_TaliTries>>
+
+    -> "It's just a common seasoning here."
+        # Player: "To us, it's just a common seasoning herb."
+        <<jump C1_TaliExplains>>
+
+===
+
+//=====================================
+// TALI TRIES PATH
+//=====================================
+
+title: C1_TaliTries
+---
+
+NPC: "Hmm. I've only ever tasted it in its concentrated potion form. It tastes... vivid."
+NPC: "Perhaps in small doses, on this 'pizza'..."
+
+>> media npc type:image path:sample_b_cg1
+
+NPC: "I am an alchemist, after all. I should understand the properties of plants."
+NPC: "Tell me the precise recipe for this 'pizza'. For science, of course."
+
+-> ...
+
+Player: "I'll send you the best recipe I can find! It's a game-changer."
+
+NPC: "I shall endeavor to synthesize the flavor without sacrificing any *actual* sacred herbs."
+NPC: "Wish me luck! This is my first culinary experiment."
+
+<<jump C1_ChapterEnd>>
+
+===
+
+//=====================================
+// TALI EXPLAINS PATH
+//=====================================
+
+title: C1_TaliExplains
+---
+
+NPC: "That is... fascinating. A stark difference in cultures."
+NPC: "Our 'Glimmerleaf' grows only on the highest peaks and requires a full moon ritual to harvest."
+NPC: "Yours must be a much weaker variant, or maybe the soil changes its potency."
+
+-> ...
+
+Player: "That makes sense. Ours grows in any garden."
+
+NPC: "It's still hard to wrap my head around. Imagine using liquid gold as floor polish!"
+NPC: "But I understand. Your world, your rules for the herb."
+
+-> ...
+
+NPC: "I suppose I have much more to learn about your common spices."
+NPC: "You should teach me more about your cuisine sometime."
+
+<<jump C1_ChapterEnd>>
+
+===
+
+//=====================================
+// CHAPTER ENDING
+//=====================================
+
+title: C1_ChapterEnd
+---
+
+System: "7:25 AM"
+
+NPC: "Thank you for clearing up the great Glimmerleaf mystery!"
+NPC: "You have taught me a valuable lesson in cultural differences."
+
+-> ...
+
+Player: "Anytime! It's fun comparing our worlds."
+
+NPC: "It truly is. I need to get back to my lab before the sun spoils the dew."
+NPC: "Let's chat tomorrow. Perhaps I can share one of my world's *safe* culinary secrets."
+
+System: "Tali has gone offline"
+
+// End of Chapter 1 - will continue to Chapter 2
+
+<<jump C2_Start>>

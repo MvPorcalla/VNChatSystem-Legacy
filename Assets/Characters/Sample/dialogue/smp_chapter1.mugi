@@ -1,0 +1,244 @@
+//=====================================
+// SAMPLE CHARACTER - CHAPTER 1
+// Introduction and First Meeting
+//=====================================
+
+contact: sample_NPC
+
+title: C1_Start
+---
+
+System: "4:50 PM"
+
+NPC: "Hey there!"
+NPC: "I'm so glad we finally get to chat!"
+NPC: "I've been waiting to meet someone from your world."
+
+>> media npc type:image path:smp_cg3
+
+-> ...
+
+Player: "Wow, this is incredible!"
+Player: "I can't believe I'm actually talking to you."
+
+NPC: "I know, right? It's like something out of a fantasy novel!"
+NPC: "Speaking of which... I have something amazing to show you."
+
+>> choice
+    -> "What is it?"
+        # Player: "What is it? I'm curious!"
+        <<jump C1_ShowMagic>>
+
+    -> "I'm a bit nervous..."
+        # Player: "I'm a bit nervous... this is all so new to me."
+        <<jump C1_Reassurance>>
+
+===
+
+//=====================================
+// MAGIC DEMONSTRATION PATH
+//=====================================
+
+title: C1_ShowMagic
+---
+
+NPC: "Watch this!"
+NPC: "In my world, we can do things that seem impossible in yours."
+
+>> media npc type:image path:smp_cg2
+
+NPC: "That was just a simple light spell!"
+NPC: "There's so much more I could show you."
+
+-> ...
+
+Player: "That's absolutely amazing!"
+Player: "Magic is real in your world?"
+
+NPC: "Oh yes! It's as common as technology is in your world."
+NPC: "Maybe I could teach you some basics sometime?"
+
+>> choice
+    -> "I'd love to learn!"
+        # Player: "I'd love to learn magic! That sounds incredible!"
+        <<jump C1_EagerStudent>>
+
+    -> "Is it dangerous?"
+        # Player: "Is magic dangerous? I want to be careful."
+        <<jump C1_SafetyFirst>>
+
+===
+
+//=====================================
+// REASSURANCE PATH
+//=====================================
+
+title: C1_Reassurance
+---
+
+NPC: "Hey, don't worry!"
+NPC: "I know this must be overwhelming."
+NPC: "When I first learned about your world, I felt the same way."
+
+-> ...
+
+Player: "Thank you for understanding."
+Player: "It's just... talking to someone from another world is pretty wild."
+
+NPC: "Of course! It's perfectly normal to feel that way."
+NPC: "How about we start with something simple?"
+NPC: "Want to see a little magic? Nothing scary, I promise!"
+
+>> choice
+    -> "Okay, show me"
+        # Player: "Okay, I trust you. Show me some magic."
+        <<jump C1_GentleMagic>>
+
+    -> "Maybe later?"
+        # Player: "Maybe we could do that later? I'm still adjusting."
+        <<jump C1_TakeItSlow>>
+
+===
+
+//=====================================
+// EAGER STUDENT PATH
+//=====================================
+
+title: C1_EagerStudent
+---
+
+NPC: "I love your enthusiasm!"
+NPC: "Most people from your world are either terrified or completely fascinated."
+NPC: "You're definitely in the fascinated camp!"
+
+-> ...
+
+Player: "How could I not be? This is like a dream come true!"
+
+NPC: "Well, let's start with the basics then."
+NPC: "Magic in our world comes from understanding the connection between all things."
+NPC: "It's not about flashy spells - it's about harmony."
+
+System: "5:15 PM"
+
+NPC: "But that's probably enough theory for today!"
+NPC: "How about we meet again tomorrow?"
+NPC: "I could show you some of the places in my world."
+
+<<jump C1_ChapterEnd>>
+
+===
+
+//=====================================
+// SAFETY FIRST PATH
+//=====================================
+
+title: C1_SafetyFirst
+---
+
+NPC: "That's a very wise question!"
+NPC: "Magic can be dangerous if used carelessly."
+NPC: "But the basics are quite safe - like lighting a candle or growing a flower."
+
+-> ...
+
+Player: "That sounds more manageable."
+Player: "I'd rather start small and work my way up."
+
+NPC: "Exactly! That's the smart approach."
+NPC: "Many young mages in our world rush into advanced magic and get hurt."
+NPC: "You have good instincts."
+
+-> ...
+
+NPC: "How about this - next time we chat, I'll show you how to sense magical energy?"
+NPC: "It's completely safe and doesn't require any actual spellcasting."
+
+<<jump C1_ChapterEnd>>
+
+===
+
+//=====================================
+// GENTLE MAGIC PATH
+//=====================================
+
+title: C1_GentleMagic
+---
+
+NPC: "Perfect! Let me show you something really gentle."
+NPC: "I'm just going to create some flower petals..."
+
+>> media npc type:image path:smp_cg1
+
+NPC: "See? Just beautiful flower petals floating in the air."
+NPC: "Nothing scary at all!"
+
+-> ...
+
+Player: "That's actually really beautiful and calming."
+Player: "I can see why you love magic."
+
+NPC: "Magic at its best brings beauty and wonder to the world."
+NPC: "Sure, there are combat spells and such, but I prefer the gentle arts."
+
+<<jump C1_ChapterEnd>>
+
+===
+
+//=====================================
+// TAKE IT SLOW PATH
+//=====================================
+
+title: C1_TakeItSlow
+---
+
+NPC: "Of course! There's no rush at all."
+NPC: "We have all the time in the world to get to know each other."
+NPC: "How about we just chat like normal friends for now?"
+
+-> ...
+
+Player: "That sounds perfect."
+Player: "Tell me about your daily life. What's it like there?"
+
+NPC: "Well, I live in a small town near the Whispering Woods."
+NPC: "In the mornings, I tend to my herb garden."
+NPC: "In the afternoons, I usually practice magic or read ancient texts."
+
+-> ...
+
+NPC: "What about you? What's a typical day like in your world?"
+
+Player: "Pretty different from yours, I imagine!"
+Player: "Lots of technology, less magic, but we have our own wonders."
+
+NPC: "I'd love to hear more about that next time we chat!"
+
+<<jump C1_ChapterEnd>>
+
+===
+
+//=====================================
+// CHAPTER ENDING
+//=====================================
+
+title: C1_ChapterEnd
+---
+
+System: "5:30 PM"
+
+NPC: "This has been such a wonderful first conversation!"
+NPC: "I feel like we're going to be great friends."
+
+-> ...
+
+Player: "I feel the same way!"
+Player: "I'm looking forward to our next chat."
+
+NPC: "Me too! Until next time!"
+
+System: "Sample has gone offline"
+
+// End of Chapter 1 - will continue to Chapter 2
+
+<<jump C2_Start>>

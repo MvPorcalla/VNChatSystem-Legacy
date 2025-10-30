@@ -1,0 +1,158 @@
+//=====================================
+// SAMPLE CHARACTER - CHAPTER 2
+// Reunion and New Discovery
+//=====================================
+
+contact: sample_NPC
+
+title: C2_Start
+---
+
+System: "4:00 PM"
+
+NPC: "Welcome back! I'm so glad we could chat again."
+NPC: "I hope you had time to think about our last conversation."
+
+-> ...
+
+Player: "Yes! I can't stop thinking about the magic you showed me."
+Player: "It's incredible, and I want to learn more."
+
+NPC: "I'm happy to hear that. Today, I thought we could explore a little deeper."
+NPC: "There's something special I want to show you."
+
+>> media npc type:image path:smp_cg1
+
+-> ...
+
+Player: "Wow… what is that?"
+Player: "It looks like a floating orb of light!"
+
+NPC: "Exactly! This is a core of magical energy."
+NPC: "It’s rare for someone from your world to even see it in person."
+
+>> choice
+    -> "Can I touch it?"
+        # Player: "May I touch it? I want to feel its energy."
+        <<jump C2_TouchOrb>>
+
+    -> "Tell me more about it"
+        # Player: "Can you explain how it works?"
+        <<jump C2_ExplainOrb>>
+
+===
+
+//=====================================
+// TOUCH THE ORB PATH
+//=====================================
+
+title: C2_TouchOrb
+---
+
+NPC: "Careful… it’s reactive, but I think you can handle it."
+NPC: "Reach out slowly."
+
+-> ...
+
+Player: "Alright, here goes..."
+Player: "Whoa! I can feel it coursing through me!"
+
+NPC: "See? You're naturally attuned to magic!"
+NPC: "Not everyone can interact with a magical core like this on the first try."
+
+-> ...
+
+Player: "This is amazing! How can I learn more?"
+Player: "Can you teach me to control magic like this?"
+
+NPC: "Of course! But patience is key."
+NPC: "Let’s start with something simple today, like moving small objects."
+
+<<jump C2_SimplePractice>>
+
+===
+
+//=====================================
+// EXPLAIN ORB PATH
+//=====================================
+
+title: C2_ExplainOrb
+---
+
+NPC: "This orb is the heart of magical energy in this region."
+NPC: "It powers spells, protects areas, and even influences the weather."
+NPC: "It’s like a living source of magic."
+
+-> ...
+
+Player: "That's incredible! So it’s kind of like nature itself has a heartbeat?"
+Player: "Does everyone here get to see it?"
+
+NPC: "Not often. Only those who are curious and respectful."
+NPC: "You’ve earned the chance to interact with it."
+
+-> ...
+
+Player: "I’d love to try!"
+Player: "Can I touch it?"
+
+NPC: "Very well… just approach slowly."
+
+<<jump C2_TouchOrb>>
+
+===
+
+//=====================================
+// SIMPLE MAGIC PRACTICE PATH
+//=====================================
+
+title: C2_SimplePractice
+---
+
+NPC: "Alright, let's begin with something very basic."
+NPC: "I want you to lift that small rock in front of you using only your focus."
+
+>> media npc type:image path:smp_cg3
+
+-> ...
+
+Player: "Concentrating… I think it’s moving!"
+Player: "Yes! It’s working!"
+
+NPC: "Excellent! You're getting the hang of it faster than I expected."
+NPC: "Remember, magic is about intention and connection, not force."
+
+-> ...
+
+Player: "I see. So I should feel the magic, not just command it."
+Player: "This is amazing, I feel like I can actually do it."
+
+NPC: "Exactly! That’s the right mindset."
+NPC: "Next time, we’ll try something a little more challenging."
+
+<<jump C2_ChapterEnd>>
+
+===
+
+//=====================================
+// CHAPTER ENDING
+//=====================================
+
+title: C2_ChapterEnd
+---
+
+System: "5:15 PM"
+
+NPC: "Today was fantastic. I’m proud of your progress!"
+NPC: "You’re learning quickly, and I can see a bright future for you here."
+
+-> ...
+
+Player: "Thank you! I can’t wait for our next lesson."
+Player: "This world feels more real than ever."
+
+NPC: "I’ll see you soon. Until then, keep practicing in your own way."
+
+System: "Sample has gone offline"
+
+// <<jump C3_Start>>
