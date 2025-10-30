@@ -1,5 +1,5 @@
 //=====================================
-// NewMessageIndicator.cs
+// NewMessageIndicator.cs - FIXED
 //=====================================
 
 using UnityEngine;
@@ -49,10 +49,11 @@ namespace ChatDialogueSystem
         /// <param name="newMessageCount">Number of new messages (must be > 0)</param>
         public void ShowIndicator(int newMessageCount)
         {
+            // ✅ FIX: Try to initialize if not already done
             if (!isInitialized)
             {
-                LogWarning(Category.UI, "[NewMessageIndicator] ShowIndicator called before initialization");
-                return;
+                LogWarning(Category.UI, "[NewMessageIndicator] ShowIndicator called before Awake - initializing now");
+                EnsureInitialized();
             }
 
             if (newMessageCount <= 0)
@@ -113,6 +114,16 @@ namespace ChatDialogueSystem
 
         private void Awake()
         {
+            EnsureInitialized();
+        }
+
+        /// <summary>
+        /// ✅ NEW: Ensure initialization happens (called from Awake or on-demand)
+        /// </summary>
+        private void EnsureInitialized()
+        {
+            if (isInitialized) return; // Already initialized
+
             ValidateReferences();
             SetupButton();
             
