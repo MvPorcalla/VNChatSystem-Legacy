@@ -18,11 +18,9 @@ namespace ChatDialogueSystem
                 if (_instance == null)
                 {
                     _instance = FindObjectOfType<PlayerSaveManager>();
-
                     if (_instance == null)
                     {
-                        Debug.LogError("[PlayerSaveManager] Instance not found in scene! " +
-                                     "Make sure PlayerSaveManager exists in 01_Bootstrap scene.");
+                        Debug.LogError("[PlayerSaveManager] Instance not found in scene!");
                     }
                 }
                 return _instance;
@@ -34,8 +32,6 @@ namespace ChatDialogueSystem
         // ═══════════════════════════════════════════════════════════
 
         private float sessionStartTime;
-        private float lastPauseTime = 0f;
-        private const float PAUSE_SAVE_COOLDOWN = 1f;
 
         public event Action OnSaveCompleted;
         public event Action OnLoadCompleted;
@@ -52,9 +48,25 @@ namespace ChatDialogueSystem
         public string GameVersion => data?.gameVersion ?? Application.version;
         public int SaveVersion => data?.saveVersion ?? PlayerData.CURRENT_VERSION;
 
-        protected override string GetDefaultSaveFileName()
+        // ═══════════════════════════════════════════════════════════
+        // ░ BASE CLASS IMPLEMENTATIONS
+        // ═══════════════════════════════════════════════════════════
+
+        protected override string GetDefaultSaveFileName() => "player_data.json";
+        protected override string GetDataFolderName() => "PlayerData";
+        protected override int GetDataVersion(PlayerData data) => data?.saveVersion ?? 1;
+        protected override int GetCurrentVersion() => PlayerData.CURRENT_VERSION;
+        protected override DebugHelper.Category GetLogCategory() => DebugHelper.Category.SaveManager;
+        
+        protected override void SetDataVersion(PlayerData data, int version)
         {
-            return "player_data.json";
+            if (data != null) data.saveVersion = version;
+        }
+
+        protected override bool MigrateData(PlayerData data, int fromVersion, int toVersion)
+        {
+            // Add migration logic here when you update PlayerData structure
+            return false;
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -68,25 +80,20 @@ namespace ChatDialogueSystem
                 _instance = this;
                 DontDestroyOnLoad(gameObject);
                 
-                base.Awake();
+                base.Awake(); // Loads data
                 sessionStartTime = Time.realtimeSinceStartup;
                 
                 if (data == null)
                 {
-                    Debug.LogError("[PlayerSaveManager] Data is null after base.Awake() - creating emergency default");
+                    Debug.LogError("[PlayerSaveManager] Data null after load - creating emergency default");
                     data = CreateDefaultData();
                 }
-                
             }
             else if (_instance != this)
             {
                 Destroy(gameObject);
             }
         }
-
-        // ═══════════════════════════════════════════════════════════
-        // ░ BASE CLASS OVERRIDES
-        // ═══════════════════════════════════════════════════════════
 
         protected override PlayerData CreateDefaultData()
         {
@@ -105,16 +112,17 @@ namespace ChatDialogueSystem
         {
             if (data == null)
             {
-                Debug.LogError("[PlayerSaveManager] CRITICAL: Data is null in OnDataLoaded!");
+                Debug.LogError("[PlayerSaveManager] Data null in OnDataLoaded!");
                 return;
             }
 
+            // Increment play count and save it immediately
             data.playCount++;
             data.lastSaveTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            SaveData(true); // ✅ FIX: Save the incremented play count
 
             OnLoadCompleted?.Invoke();
-
-            Debug.Log($"[PlayerSaveManager] Loaded player data: {data.playerName} (Session #{data.playCount})");
+            Debug.Log($"[PlayerSaveManager] Loaded: {data.playerName} (Session #{data.playCount})");
         }
 
         protected override void OnBeforeSave()
@@ -129,29 +137,13 @@ namespace ChatDialogueSystem
             Debug.Log($"[PlayerSaveManager] Saved: {data.playerName} | PlayTime: {FormattedPlayTime}");
         }
 
-        protected override int GetDataVersion(PlayerData data) => data?.saveVersion ?? 1;
-
-        protected override void SetDataVersion(PlayerData data, int version)
-        {
-            if (data != null)
-                data.saveVersion = version;
-        }
-
-        protected override int GetCurrentVersion() => PlayerData.CURRENT_VERSION;
-
-        protected override DebugHelper.Category GetLogCategory() => DebugHelper.Category.SaveManager;
-
-        protected override string GetDataFolderName() => "PlayerData";
-
-        protected override bool MigrateData(PlayerData data, int fromVersion, int toVersion)
-        {
-            return false;
-        }
-
         // ═══════════════════════════════════════════════════════════
         // ░ PUBLIC METHODS
         // ═══════════════════════════════════════════════════════════
 
+        /// <summary>
+        /// Updates player name and saves immediately.
+        /// </summary>
         public void SetPlayerName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -167,23 +159,24 @@ namespace ChatDialogueSystem
             }
 
             data.playerName = name.Trim();
-            SaveData();
+            SaveData(true);
             Debug.Log($"[PlayerSaveManager] Player name updated: {data.playerName}");
+        }
+
+        /// <summary>
+        /// Call when game session ends (scene change, menu return, etc.)
+        /// Updates play time and saves.
+        /// </summary>
+        public void EndSession()
+        {
+            UpdatePlayTime();
+            SaveData(true);
+            Debug.Log($"[PlayerSaveManager] Session ended | Total: {FormattedPlayTime}");
         }
 
         // ═══════════════════════════════════════════════════════════
         // ░ PLAY TIME TRACKING
         // ═══════════════════════════════════════════════════════════
-
-        private string FormatSeconds(int seconds)
-        {
-            if (seconds < 60) return "< 1m";
-
-            int hours = seconds / 3600;
-            int minutes = (seconds % 3600) / 60;
-
-            return hours > 0 ? $"{hours}h {minutes}m" : $"{minutes}m";
-        }
 
         private void UpdatePlayTime()
         {
@@ -193,54 +186,26 @@ namespace ChatDialogueSystem
             data.totalPlayTimeSeconds += sessionTime;
             sessionStartTime = Time.realtimeSinceStartup;
 
-            Debug.Log($"[PlayerSaveManager] Session time: +{sessionTime}s | Total: {FormattedPlayTime}");
+            Debug.Log($"[PlayerSaveManager] Session: +{sessionTime}s | Total: {FormattedPlayTime}");
+        }
+
+        private string FormatSeconds(int seconds)
+        {
+            if (seconds < 60) return "< 1m";
+            int hours = seconds / 3600;
+            int minutes = (seconds % 3600) / 60;
+            return hours > 0 ? $"{hours}h {minutes}m" : $"{minutes}m";
         }
 
         // ═══════════════════════════════════════════════════════════
-        // ░ LIFECYCLE EVENTS
+        // ░ LIFECYCLE
         // ═══════════════════════════════════════════════════════════
 
         protected override void OnApplicationQuit()
         {
             UpdatePlayTime();
-            base.OnApplicationQuit();
-            Debug.Log("[PlayerSaveManager] Application quit - final save completed");
-        }
-
-        private void OnApplicationPause(bool pauseStatus)
-        {
-            if (pauseStatus)
-            {
-                float now = Time.realtimeSinceStartup;
-                if (now - lastPauseTime > PAUSE_SAVE_COOLDOWN)
-                {
-                    UpdatePlayTime();
-                    SaveData();
-                    lastPauseTime = now;
-                }
-            }
-            else
-            {
-                sessionStartTime = Time.realtimeSinceStartup;
-            }
-        }
-
-        private void OnApplicationFocus(bool hasFocus)
-        {
-            if (!hasFocus)
-            {
-                float now = Time.realtimeSinceStartup;
-                if (now - lastPauseTime > PAUSE_SAVE_COOLDOWN)
-                {
-                    UpdatePlayTime();
-                    SaveData();
-                    lastPauseTime = now;
-                }
-            }
-            else
-            {
-                sessionStartTime = Time.realtimeSinceStartup;
-            }
+            base.OnApplicationQuit(); // ✅ This already calls SaveData(true)
+            Debug.Log("[PlayerSaveManager] Quit - final save completed");
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -248,19 +213,18 @@ namespace ChatDialogueSystem
         // ═══════════════════════════════════════════════════════════
 
 #if UNITY_EDITOR
-
         [ContextMenu("Debug/Force Save")]
         private void DebugForceSave()
         {
             SaveData(true);
-            Debug.Log($"✅ PlayerSaveManager: Force saved!");
+            Debug.Log("✅ Force saved!");
         }
 
         [ContextMenu("Debug/Reload From Disk")]
         private void DebugReload()
         {
             LoadData();
-            Debug.Log($"✅ PlayerSaveManager: Reloaded!");
+            Debug.Log("✅ Reloaded!");
         }
 
         [ContextMenu("Debug/Restore From Backup")]
@@ -273,15 +237,10 @@ namespace ChatDialogueSystem
         [ContextMenu("Debug/Open Save Folder")]
         private void DebugOpenSave()
         {
-            // ✅ FIX: Use the actual save folder path
             string folderPath = System.IO.Path.GetDirectoryName(savePath);
+            if (string.IsNullOrEmpty(folderPath)) EnsurePathsInitialized();
             
-            if (string.IsNullOrEmpty(folderPath))
-            {
-                EnsurePathsInitialized();
-                folderPath = System.IO.Path.GetDirectoryName(savePath);
-            }
-            
+            folderPath = System.IO.Path.GetDirectoryName(savePath);
             if (System.IO.Directory.Exists(folderPath))
             {
                 Application.OpenURL(folderPath);
@@ -289,17 +248,14 @@ namespace ChatDialogueSystem
             }
             else
             {
-                Debug.LogWarning($"⚠️ Folder doesn't exist yet: {folderPath}");
+                Debug.LogWarning($"⚠️ Folder doesn't exist: {folderPath}");
             }
         }
 
         [ContextMenu("Debug/Open Backup Folder")]
         private void DebugOpenBackup()
         {
-            if (string.IsNullOrEmpty(backupFolder))
-            {
-                EnsurePathsInitialized();
-            }
+            if (string.IsNullOrEmpty(backupFolder)) EnsurePathsInitialized();
             
             if (System.IO.Directory.Exists(backupFolder))
             {
@@ -308,7 +264,7 @@ namespace ChatDialogueSystem
             }
             else
             {
-                Debug.LogWarning($"⚠️ Backup folder doesn't exist yet: {backupFolder}");
+                Debug.LogWarning($"⚠️ Backup folder doesn't exist: {backupFolder}");
             }
         }
 
@@ -350,6 +306,13 @@ namespace ChatDialogueSystem
                 SaveData(true);
                 Debug.Log($"✅ Added 1 hour | Total: {FormattedPlayTime}");
             }
+        }
+
+        [ContextMenu("Debug/Test End Session")]
+        private void DebugEndSession()
+        {
+            EndSession();
+            Debug.Log("✅ Session ended manually");
         }
 #endif
     }

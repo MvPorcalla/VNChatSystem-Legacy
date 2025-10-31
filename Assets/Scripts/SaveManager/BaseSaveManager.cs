@@ -219,14 +219,18 @@ namespace ChatDialogueSystem
 
         protected void SaveData(bool forceSave = false)
         {
-            if (!forceSave && enableSaveThrottling && saveCooldown > 0)
+            // ✅ FIX: forceSave should ALWAYS bypass throttling
+            if (!forceSave)
             {
-                float timeSinceLastSave = Time.realtimeSinceStartup - lastSaveTime;
-                if (timeSinceLastSave < saveCooldown)
+                if (enableSaveThrottling && saveCooldown > 0)
                 {
-                    DebugHelper.Log(GetLogCategory(),
-                        $"Save throttled ({timeSinceLastSave:F1}s < {saveCooldown}s)");
-                    return;
+                    float timeSinceLastSave = Time.realtimeSinceStartup - lastSaveTime;
+                    if (timeSinceLastSave < saveCooldown)
+                    {
+                        DebugHelper.Log(GetLogCategory(),
+                            $"Save throttled ({timeSinceLastSave:F1}s < {saveCooldown}s)");
+                        return;
+                    }
                 }
             }
 
