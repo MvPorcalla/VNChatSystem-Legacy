@@ -1,5 +1,5 @@
 //=====================================
-// DialogueSaveManager.cs
+// DialogueSaveManager.cs - COMPLETE FIXED VERSION
 //=====================================
 
 using System;
@@ -21,7 +21,6 @@ namespace ChatDialogueSystem
                 {
                     _instance = FindObjectOfType<DialogueSaveManager>();
 
-                    // Log error if not found, but don't create
                     if (_instance == null)
                     {
                         Debug.LogError("[DialogueSaveManager] Instance not found in scene! " +
@@ -32,10 +31,83 @@ namespace ChatDialogueSystem
             }
         }
 
-        protected override string GetDefaultSaveFileName()
+        // ═══════════════════════════════════════════════════════════
+        // ░ BASE CLASS IMPLEMENTATIONS
+        // ═══════════════════════════════════════════════════════════
+
+        protected override string GetDefaultSaveFileName() => "chat_data.json";
+        protected override string GetDataFolderName() => "ChatData";
+        protected override int GetDataVersion(ChatSaveData data) => data?.version ?? 1;
+        protected override int GetCurrentVersion() => ChatSaveData.CURRENT_VERSION;
+        protected override Category GetLogCategory() => Category.SaveManager;
+
+        protected override void SetDataVersion(ChatSaveData data, int version)
         {
-            return "chat_data.json";
+            if (data != null) data.version = version;
         }
+
+        protected override bool MigrateData(ChatSaveData data, int fromVersion, int toVersion)
+        {
+            return false;
+        }
+
+        protected override ChatSaveData CreateDefaultData()
+        {
+            Log(Category.SaveManager, "📝 CreateDefaultData() called - creating fresh ChatSaveData");
+            return new ChatSaveData
+            {
+                version = ChatSaveData.CURRENT_VERSION,
+                chatStateList = new List<ChatStateEntry>()
+            };
+        }
+
+        protected override void OnDataLoaded()
+        {
+            Log(Category.SaveManager, $"🔵 OnDataLoaded() CALLED | data is {(data == null ? "NULL" : "NOT NULL")}");
+            
+            if (data == null)
+            {
+                LogError(Category.SaveManager, "CRITICAL: Data is null after load! Creating emergency default.");
+                data = CreateDefaultData();
+                return;
+            }
+            
+            if (data.chatStateList == null)
+            {
+                LogWarning(Category.SaveManager, "Loaded data had null chatStateList - initializing empty list (data may be corrupted)");
+                data.chatStateList = new List<ChatStateEntry>();
+            }
+            
+            Log(Category.SaveManager, $"✅ OnDataLoaded: {data.chatStateList.Count} chat states loaded from disk");
+            
+            if (data.chatStateList.Count > 0)
+            {
+                Log(Category.SaveManager, $"   📂 Loaded chats: {string.Join(", ", data.chatStateList.ConvertAll(e => e.chatID))}");
+                
+                var firstEntry = data.chatStateList[0];
+                Log(Category.SaveManager, 
+                    $"   📋 First chat details: ID='{firstEntry.chatID}' | " +
+                    $"Messages={firstEntry.state?.chatHistory?.Count ?? 0} | " +
+                    $"Character='{firstEntry.state?.characterName}'");
+            }
+            else
+            {
+                Log(Category.SaveManager, "   ⚠️ No chat states found in loaded data (new save or empty file)");
+            }
+        }
+
+        protected override void OnBeforeSave()
+        {
+            if (data != null)
+            {
+                data.version = ChatSaveData.CURRENT_VERSION;
+                Log(Category.SaveManager, $"💾 OnBeforeSave: Preparing to save {data.chatStateList?.Count ?? 0} chat states");
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // ░ INITIALIZATION
+        // ═══════════════════════════════════════════════════════════
 
         protected override void Awake()
         {
@@ -93,76 +165,55 @@ namespace ChatDialogueSystem
             Log(Category.SaveManager, $"   Data validation complete: {data.chatStateList.Count} chat states present");
         }
 
-        protected override ChatSaveData CreateDefaultData()
+        // ═══════════════════════════════════════════════════════════
+        // ░ LIFECYCLE - COMPLETE REDUNDANCY FOR ALL PLATFORMS
+        // ═══════════════════════════════════════════════════════════
+
+        protected override void OnApplicationQuit()
         {
-            Log(Category.SaveManager, "📝 CreateDefaultData() called - creating fresh ChatSaveData");
-            return new ChatSaveData
-            {
-                version = ChatSaveData.CURRENT_VERSION,
-                chatStateList = new List<ChatStateEntry>()
-            };
+            Log(Category.SaveManager, "Application quitting - final dialogue save");
+            SaveData(true);
+            base.OnApplicationQuit();
         }
 
-        protected override void OnDataLoaded()
+        // Unity's last chance before destruction
+        private void OnDestroy()
         {
-            Log(Category.SaveManager, $"🔵 OnDataLoaded() CALLED | data is {(data == null ? "NULL" : "NOT NULL")}");
-            
-            if (data == null)
+            if (_instance == this && data != null && data.chatStateList != null)
             {
-                LogError(Category.SaveManager, "CRITICAL: Data is null after load! Creating emergency default.");
-                data = CreateDefaultData();
-                return;
-            }
-            
-            if (data.chatStateList == null)
-            {
-                LogWarning(Category.SaveManager, "Loaded data had null chatStateList - initializing empty list (data may be corrupted)");
-                data.chatStateList = new List<ChatStateEntry>();
-            }
-            
-            Log(Category.SaveManager, $"✅ OnDataLoaded: {data.chatStateList.Count} chat states loaded from disk");
-            
-            if (data.chatStateList.Count > 0)
-            {
-                Log(Category.SaveManager, $"   📂 Loaded chats: {string.Join(", ", data.chatStateList.ConvertAll(e => e.chatID))}");
-                
-                var firstEntry = data.chatStateList[0];
-                Log(Category.SaveManager, 
-                    $"   📋 First chat details: ID='{firstEntry.chatID}' | " +
-                    $"Messages={firstEntry.state?.chatHistory?.Count ?? 0} | " +
-                    $"Character='{firstEntry.state?.characterName}'");
-            }
-            else
-            {
-                Log(Category.SaveManager, "   ⚠️ No chat states found in loaded data (new save or empty file)");
+                Log(Category.SaveManager, "DialogueSaveManager destroyed - emergency save");
+                SaveData(true);
             }
         }
 
-        protected override void OnBeforeSave()
+        // Scene changes
+        private void OnDisable()
         {
-            if (data != null)
+            if (data != null && data.chatStateList != null && data.chatStateList.Count > 0)
             {
-                data.version = ChatSaveData.CURRENT_VERSION;
-                Log(Category.SaveManager, $"💾 OnBeforeSave: Preparing to save {data.chatStateList?.Count ?? 0} chat states");
+                Log(Category.SaveManager, "DialogueSaveManager disabled - saving dialogue");
+                SaveData(true);
             }
         }
 
-        protected override int GetDataVersion(ChatSaveData data) => data?.version ?? 1;
-
-        protected override void SetDataVersion(ChatSaveData data, int version)
+        // ✅ MOBILE: Save when app goes to background
+        private void OnApplicationPause(bool pauseStatus)
         {
-            if (data != null) data.version = version;
+            if (pauseStatus && _instance == this && data != null)
+            {
+                Log(Category.SaveManager, "App paused - saving dialogue (mobile safety)");
+                SaveData(true);
+            }
         }
 
-        protected override int GetCurrentVersion() => ChatSaveData.CURRENT_VERSION;
-
-        protected override Category GetLogCategory() => Category.SaveManager;
-
-        protected override string GetDataFolderName() => "ChatData";
-
-        protected override bool MigrateData(ChatSaveData data, int fromVersion, int toVersion)
+        // ✅ MOBILE: Save when app loses focus
+        private void OnApplicationFocus(bool hasFocus)
         {
-            return false;
+            if (!hasFocus && _instance == this && data != null)
+            {
+                Log(Category.SaveManager, "App lost focus - saving dialogue (mobile safety)");
+                SaveData(true);
+            }
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -213,7 +264,7 @@ namespace ChatDialogueSystem
             };
 
             data.chatStateList.Add(new ChatStateEntry(chatID, newState));
-            SaveData(true);
+            SaveData(true); // ✅ Force save when creating new chat
             Log(Category.SaveManager, $"💾 Saved new chat state to disk");
             
             return newState;
@@ -246,6 +297,7 @@ namespace ChatDialogueSystem
                 Log(Category.SaveManager, $"Added new chat state: {chatID}");
             }
 
+            // ⚠️ Regular saves USE throttle to prevent spam during rapid dialogue updates
             SaveData();
         }
 
@@ -261,7 +313,7 @@ namespace ChatDialogueSystem
             
             if (removed > 0)
             {
-                SaveData(true);
+                SaveData(true); // ✅ Force save when clearing
                 Log(Category.SaveManager, $"Cleared chat state: {chatID}");
             }
         }
@@ -276,7 +328,7 @@ namespace ChatDialogueSystem
 
             int count = data.chatStateList.Count;
             data.chatStateList.Clear();
-            SaveData(true);
+            SaveData(true); // ✅ Force save when clearing
             
             Log(Category.SaveManager, $"Cleared all chat states ({count} removed)");
         }
@@ -292,6 +344,20 @@ namespace ChatDialogueSystem
         {
             return data?.chatStateList?.Count ?? 0;
         }
+
+        /// <summary>
+        /// Forces an immediate save, bypassing throttle.
+        /// Use for critical save points (scene changes, quits, etc.)
+        /// </summary>
+        public void ForceSave()
+        {
+            SaveData(true);
+            Log(Category.SaveManager, "Dialogue data force saved");
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // ░ DEBUG METHODS
+        // ═══════════════════════════════════════════════════════════
 
 #if UNITY_EDITOR
         [ContextMenu("Debug/Print All Chat States")]
@@ -324,7 +390,6 @@ namespace ChatDialogueSystem
         [ContextMenu("Debug/Read Raw Save File")]
         private void DebugReadRawFile()
         {
-            // Force paths to be initialized
             if (string.IsNullOrEmpty(savePath))
             {
                 EnsurePathsInitialized();
@@ -380,7 +445,6 @@ namespace ChatDialogueSystem
         [ContextMenu("Debug/Open Save Folder")]
         private void DebugOpenSaveFolder()
         {
-            // Use the actual savePath directory
             string folderPath = System.IO.Path.GetDirectoryName(savePath);
             
             if (string.IsNullOrEmpty(folderPath))
@@ -440,29 +504,6 @@ namespace ChatDialogueSystem
                      $"║ Save Exists: {System.IO.File.Exists(savePath)}\n" +
                      $"║ Backup Folder Exists: {System.IO.Directory.Exists(backupFolder)}\n" +
                      $"╚═══════════════════════════════════════════╝");
-        }
-        
-        [ContextMenu("Debug/Test Serialization")]
-        private void DebugTestSerialization()
-        {
-            var testData = new ChatSaveData
-            {
-                version = 1,
-                chatStateList = new List<ChatStateEntry>
-                {
-                    new ChatStateEntry("test_chat_1", new ChatState("test_chat_1") 
-                    { 
-                        characterName = "TestChar",
-                        chatHistory = new List<MessageData>()
-                    })
-                }
-            };
-            
-            string json = JsonUtility.ToJson(testData, true);
-            Debug.Log($"✅ Test Serialization:\n{json}");
-            
-            var deserialized = JsonUtility.FromJson<ChatSaveData>(json);
-            Debug.Log($"✅ Deserialized: {deserialized.chatStateList?.Count ?? 0} entries");
         }
 #endif
     }

@@ -198,14 +198,47 @@ namespace ChatDialogueSystem
         }
 
         // ═══════════════════════════════════════════════════════════
-        // ░ LIFECYCLE
+        // ░ LIFECYCLE - COMPLETE REDUNDANCY FOR ALL PLATFORMS
         // ═══════════════════════════════════════════════════════════
 
         protected override void OnApplicationQuit()
         {
             UpdatePlayTime();
-            base.OnApplicationQuit(); // ✅ This already calls SaveData(true)
+            base.OnApplicationQuit();
             Debug.Log("[PlayerSaveManager] Quit - final save completed");
+        }
+
+        // Unity's last chance before destruction
+        private void OnDestroy()
+        {
+            if (_instance == this && data != null)
+            {
+                UpdatePlayTime();
+                SaveData(true);
+                Debug.Log("[PlayerSaveManager] Destroyed - emergency save");
+            }
+        }
+
+        // ✅ MOBILE: Save when app goes to background
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus && _instance == this && data != null)
+            {
+                UpdatePlayTime();
+                SaveData(true);
+                Debug.Log("[PlayerSaveManager] App paused - saved playtime");
+            }
+        }
+
+        // ✅ MOBILE: Save when app loses focus
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus && _instance == this && data != null)
+            {
+                UpdatePlayTime();
+                SaveData(true);
+                Debug.Log("[PlayerSaveManager] App lost focus - saved playtime");
+            }
         }
 
         // ═══════════════════════════════════════════════════════════
