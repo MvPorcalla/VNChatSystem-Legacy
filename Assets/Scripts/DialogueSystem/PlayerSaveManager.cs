@@ -116,10 +116,18 @@ namespace ChatDialogueSystem
                 return;
             }
 
+            // Guard against double-increment
+            if (data.playCount > 0 && (DateTime.Now - GetLastLoadTime()).TotalSeconds < 5)
+            {
+                Debug.LogWarning("[PlayerSaveManager] OnDataLoaded called twice within 5 seconds - skipping increment");
+                OnLoadCompleted?.Invoke();
+                return;
+            }
+
             // Increment play count and save it immediately
             data.playCount++;
             data.lastSaveTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            SaveData(true); // ✅ FIX: Save the incremented play count
+            SaveData(true); // Save the incremented play count
 
             OnLoadCompleted?.Invoke();
             Debug.Log($"[PlayerSaveManager] Loaded: {data.playerName} (Session #{data.playCount})");
@@ -195,6 +203,18 @@ namespace ChatDialogueSystem
             int hours = seconds / 3600;
             int minutes = (seconds % 3600) / 60;
             return hours > 0 ? $"{hours}h {minutes}m" : $"{minutes}m";
+        }
+
+        // Gets the last load time from saved data
+        private DateTime GetLastLoadTime()
+        {
+            if (string.IsNullOrEmpty(data?.lastSaveTime))
+                return DateTime.MinValue;
+
+            if (DateTime.TryParse(data.lastSaveTime, out DateTime lastTime))
+                return lastTime;
+
+            return DateTime.MinValue;
         }
 
         // ═══════════════════════════════════════════════════════════

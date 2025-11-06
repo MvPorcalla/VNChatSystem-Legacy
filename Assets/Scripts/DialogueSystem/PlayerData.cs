@@ -14,7 +14,6 @@ namespace ChatDialogueSystem
 
     // public bool hasSeenTutorial = false;
     // public bool hasCompletedChapter1 = false;
-    // public bool hasUnlockedGallery = false;
     // public bool hasCompletedAllChats = false;
     // public bool hasSeenTrueEnding = false;
 
