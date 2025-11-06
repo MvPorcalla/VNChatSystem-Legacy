@@ -1,5 +1,5 @@
 //=====================================
-// NPCChatData.cs
+// NPCChatData.cs - With CG Gallery Support
 //=====================================
 
 using System.Collections.Generic;
@@ -23,9 +23,14 @@ namespace ChatDialogueSystem
         [Tooltip("List of .mugi files in chapter order")]
         public List<TextAsset> mugiChapters = new List<TextAsset>();
 
+        [Header("CG Gallery")]
+        [Tooltip("All CGs for this character (in display order). Enter Addressable keys manually.")]
+        public List<string> allCGAddressableKeys = new List<string>();
+
         private void GenerateNewChatID()
         {
-            string storyUIID = System.Guid.NewGuid().ToString().Substring(0, 6);
+            string guid = System.Guid.NewGuid().ToString("N"); // No hyphens (32 chars)
+            string storyUIID = guid.Substring(0, System.Math.Min(6, guid.Length));
             chatID = $"{storyUIID}_{characterName}";
         }
 

@@ -32,6 +32,9 @@ namespace ChatDialogueSystem
         public string imagePath;    // Addressable path for images
         public string timestamp;    // Display time (HH:mm format)
         public string messageId;    // Unique identifier (for read tracking)
+
+        // ✅ NEW: Flag for unlockable CGs
+        public bool shouldUnlockCG;
         
         // Empty constructor for JsonUtility deserialization
         public MessageData() { }
@@ -137,6 +140,9 @@ namespace ChatDialogueSystem
         public int currentMessageIndex;           // Next message to display (0-based)
         public List<string> readMessageIds;       // IDs of messages player has seen
         public List<MessageData> chatHistory;     // Full conversation history
+
+        // ✅ NEW: Track unlocked CGs per chat
+        public List<string> unlockedCGs = new List<string>();
         public bool isInPauseState;               // True if waiting at a pause point
 
         // ✅ CRITICAL: Empty constructor for JsonUtility deserialization

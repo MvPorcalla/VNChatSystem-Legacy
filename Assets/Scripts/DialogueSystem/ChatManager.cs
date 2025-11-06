@@ -685,6 +685,70 @@ namespace ChatDialogueSystem
         }
 
         // ═══════════════════════════════════════════════════════════
+        // ░ CG UNLOCK API
+        // ═══════════════════════════════════════════════════════════
+
+        /// <summary>
+        /// Gets all unlocked CGs for the current chat.
+        /// </summary>
+        public List<string> GetUnlockedCGs()
+        {
+            if (currentChatState == null)
+            {
+                LogWarning(Category.ChatManager, "No active chat - returning empty CG list");
+                return new List<string>();
+            }
+
+            return new List<string>(currentChatState.unlockedCGs);
+        }
+
+        /// <summary>
+        /// Gets all unlocked CGs across all saved chats.
+        /// </summary>
+        public List<string> GetAllUnlockedCGs()
+        {
+            var allCGs = new List<string>();
+            var saveManager = DialogueSaveManager.Instance;
+
+            if (saveManager == null)
+            {
+                LogError(Category.ChatManager, "DialogueSaveManager not found");
+                return allCGs;
+            }
+
+            foreach (var chatData in availableChats)
+            {
+                var state = saveManager.GetChatState(chatData.ChatID);
+                if (state?.unlockedCGs != null)
+                {
+                    allCGs.AddRange(state.unlockedCGs);
+                }
+            }
+
+            // Remove duplicates
+            return allCGs.Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Checks if a specific CG is unlocked in the current chat.
+        /// </summary>
+        public bool IsCGUnlocked(string cgPath)
+        {
+            if (currentChatState == null || string.IsNullOrEmpty(cgPath))
+                return false;
+
+            return currentChatState.unlockedCGs.Contains(cgPath);
+        }
+
+        /// <summary>
+        /// Gets unlock count for current chat.
+        /// </summary>
+        public int GetUnlockedCGCount()
+        {
+            return currentChatState?.unlockedCGs?.Count ?? 0;
+        }
+
+        // ═══════════════════════════════════════════════════════════
         // ░ PUBLIC SAVE API
         // ═══════════════════════════════════════════════════════════
 

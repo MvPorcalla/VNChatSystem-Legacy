@@ -280,23 +280,34 @@ namespace ChatDialogueSystem
             var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length < 3)
             {
-                LogWarning(Category.MugiParser, 
+                LogWarning(Category.MugiParser,
                     $"[{context.fileName}:{context.lineNumber}] Invalid media command format: {line}");
                 return true;
             }
 
             string speaker = parts[2];
             string imagePath = ExtractPathFromMediaCommand(line);
-            
+
             if (string.IsNullOrEmpty(imagePath))
             {
-                LogWarning(Category.MugiParser, 
+                LogWarning(Category.MugiParser,
                     $"[{context.fileName}:{context.lineNumber}] No path found in media command: {line}");
                 return true;
             }
-            
+
+            // ✅ NEW: Detect unlock flag
+            bool shouldUnlock = line.Contains("unlock:true");
+
             var imageMessage = new MessageData(MessageData.MessageType.Image, speaker, "", imagePath);
-            
+            imageMessage.shouldUnlockCG = shouldUnlock; // ✅ Set the unlock flag
+
+            // ✅ NEW: Log when unlockable CG detected
+            if (shouldUnlock)
+            {
+                Log(Category.MugiParser,
+                    $"[Line {context.lineNumber}] 📸 Unlockable CG detected: {imagePath}");
+            }
+
             if (context.processingChoiceContent && context.currentChoice != null)
             {
                 context.currentChoice.playerMessages.Add(imageMessage);
@@ -305,9 +316,11 @@ namespace ChatDialogueSystem
             else
             {
                 context.currentNode.messages.Add(imageMessage);
-                Log(Category.MugiParser, $"[Line {context.lineNumber}] Added image to node: {imagePath}");
+                Log(Category.MugiParser,
+                    $"[Line {context.lineNumber}] Added image to node: {imagePath}" +
+                    (shouldUnlock ? " [UNLOCKABLE]" : ""));
             }
-            
+
             return true;
         }
 

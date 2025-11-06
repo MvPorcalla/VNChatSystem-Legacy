@@ -154,11 +154,14 @@ namespace ChatDialogueSystem
                     {
                         stateSnapshot.chatHistory.Add(message);
                         stateSnapshot.readMessageIds.Add(message.messageId);
+
+                        // ✅ NEW: Check for CG unlocks
+                        CheckAndUnlockCG(message);
                     }
 
                     stateSnapshot.currentMessageIndex = endIndex;
                     DetermineNextAction();
-                    chatManager.SaveChatState();
+                    chatManager.SaveChatState(); // Normal throttled save
                 });
             }
             else
@@ -375,8 +378,42 @@ namespace ChatDialogueSystem
         }
 
         /// <summary>
+        /// Checks if a message should unlock a CG and handles the unlock process.
+        /// </summary>
+        private void CheckAndUnlockCG(MessageData message)
+        {
+            if (!message.shouldUnlockCG || string.IsNullOrEmpty(message.imagePath))
+                return;
+
+            if (currentChatState == null)
+            {
+                LogError(Category.SaveManager, "Cannot unlock CG: currentChatState is null");
+                return;
+            }
+
+            // Check if already unlocked
+            if (currentChatState.unlockedCGs.Contains(message.imagePath))
+            {
+                Log(Category.SaveManager, $"CG already unlocked: {message.imagePath}");
+                return;
+            }
+
+            // Unlock the CG
+            currentChatState.unlockedCGs.Add(message.imagePath);
+            Log(Category.SaveManager, $"🎨 CG UNLOCKED: {message.imagePath}");
+
+            // ✅ CRITICAL: Force immediate save for milestone achievements
+            if (chatManager != null)
+            {
+                DialogueSaveManager.Instance?.ForceSave();
+                Log(Category.SaveManager, $"💾 Force saved CG unlock: {message.imagePath}");
+            }
+        }
+
+        /// <summary>
         /// Completely resets the current chat story by deleting all save data
         /// and returning to the contact list. Forces full re-initialization on next entry.
+        /// CGs remain unlocked for gallery access.
         /// </summary>
         /// <remarks>
         /// This method is safe to call at any time. It validates state, stops ongoing
@@ -423,11 +460,31 @@ namespace ChatDialogueSystem
                 Log(Category.ChatManager, "Nuclear reset complete - all pools destroyed");
             }
 
-            // === STEP 3: Delete Save Data Entry ===
+            // === STEP 3: ✅ NEW - Preserve unlocked CGs before clearing ===
+            List<string> preservedCGs = new List<string>();
+            if (currentChatState != null && currentChatState.unlockedCGs != null)
+            {
+                preservedCGs = new List<string>(currentChatState.unlockedCGs);
+                Log(Category.ChatManager, $"Preserving {preservedCGs.Count} unlocked CGs: {string.Join(", ", preservedCGs)}");
+            }
+
+            // === STEP 4: Delete Save Data Entry ===
             Log(Category.ChatManager, "Deleting save data for this chat...");
             DialogueSaveManager.Instance.ClearChatState(currentChatID);
 
-            // === STEP 4: Nullify In-Memory State ===
+            // === STEP 5: ✅ NEW - Create fresh state with preserved CGs ===
+            var freshState = new ChatState(currentChatID)
+            {
+                characterName = currentChatData.characterName,
+                unlockedCGs = preservedCGs // ← Restore the CGs
+            };
+
+            DialogueSaveManager.Instance.SaveChatState(currentChatID, freshState);
+            DialogueSaveManager.Instance.ForceSave(); // ← Ensure it's written immediately
+
+            Log(Category.ChatManager, $"Created fresh state with {preservedCGs.Count} preserved CGs");
+
+            // === STEP 6: Nullify In-Memory State ===
             currentChatState = null;
             currentDialogueNodes = null;
             currentNode = null;
@@ -435,11 +492,11 @@ namespace ChatDialogueSystem
 
             Log(Category.ChatManager, "In-memory state cleared");
 
-            // === STEP 5: Navigate Back to Contact List ===
+            // === STEP 7: Navigate Back to Contact List ===
             Log(Category.ChatManager, "Returning to contact list...");
             chatManager.ReturnToContactList();
 
-            Log(Category.ChatManager, "=== RESET COMPLETE - All resources freed, ready for fresh start ===");
+            Log(Category.ChatManager, "=== RESET COMPLETE - Story reset, CGs preserved ===");
         }
     }
 }

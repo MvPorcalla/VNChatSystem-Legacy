@@ -482,6 +482,59 @@ namespace ChatDialogueSystem
                 Debug.LogWarning($"⚠️ Backup folder doesn't exist yet: {backupFolder}\nIt will be created on first backup.");
             }
         }
+
+        [ContextMenu("Debug/Print Unlocked CGs")]
+        private void DebugPrintUnlockedCGs()
+        {
+            Debug.Log($"╔═══════ UNLOCKED CGs ═══════╗");
+            
+            if (data?.chatStateList != null && data.chatStateList.Count > 0)
+            {
+                int totalCGs = 0;
+                foreach (var entry in data.chatStateList)
+                {
+                    var state = entry.state;
+                    if (state.unlockedCGs != null && state.unlockedCGs.Count > 0)
+                    {
+                        Debug.Log($"║ Chat: {entry.chatID} ({state.characterName})");
+                        Debug.Log($"║   Unlocked: {state.unlockedCGs.Count} CGs");
+                        foreach (var cg in state.unlockedCGs)
+                        {
+                            Debug.Log($"║     🎨 {cg}");
+                        }
+                        totalCGs += state.unlockedCGs.Count;
+                        Debug.Log("╠═════════════════════════════════════════╣");
+                    }
+                }
+                Debug.Log($"║ TOTAL: {totalCGs} CGs unlocked across all chats");
+            }
+            else
+            {
+                Debug.Log("║ No CGs unlocked yet");
+            }
+            
+            Debug.Log("╚═════════════════════════════════════════╝");
+        }
+
+        [ContextMenu("Debug/Clear All Unlocked CGs")]
+        private void DebugClearAllCGs()
+        {
+            if (data?.chatStateList != null)
+            {
+                int clearedCount = 0;
+                foreach (var entry in data.chatStateList)
+                {
+                    if (entry.state?.unlockedCGs != null)
+                    {
+                        clearedCount += entry.state.unlockedCGs.Count;
+                        entry.state.unlockedCGs.Clear();
+                    }
+                }
+                
+                SaveData(true);
+                Debug.Log($"✅ Cleared {clearedCount} unlocked CGs and saved");
+            }
+        }
         
         [ContextMenu("Debug/Print All Paths")]
         private void DebugPrintPaths()
