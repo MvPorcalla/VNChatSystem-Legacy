@@ -10,6 +10,8 @@ title: C2_Start
 
 System: "4:00 PM"
 
+NPC: "Hi Melvs"
+
 NPC: "Welcome back! I'm so glad we could chat again."
 NPC: "I hope you had time to think about our last conversation."
 
@@ -21,7 +23,7 @@ Player: "It's incredible, and I want to learn more."
 NPC: "I'm happy to hear that. Today, I thought we could explore a little deeper."
 NPC: "There's something special I want to show you."
 
->> media npc type:image path:smp_cg1
+>> media npc type:image unlock:true path:ChatA_CG4
 
 -> ...
 
@@ -112,7 +114,7 @@ title: C2_SimplePractice
 NPC: "Alright, let's begin with something very basic."
 NPC: "I want you to lift that small rock in front of you using only your focus."
 
->> media npc type:image path:smp_cg3
+>> media npc type:image unlock:true path:ChatA_CG5
 
 -> ...
 

@@ -21,3 +21,8 @@ MonoBehaviour:
   chatID: 9429c5_sample_b
   mugiChapters:
   - {fileID: -492053818911416697, guid: 521436e9f3a615e4bb87d10082da7d52, type: 3}
+  allCGAddressableKeys:
+  - ChatB_CG1
+  - ChatB_CG2
+  - ChatB_CG3
+  - ChatB_CG4

@@ -960,6 +960,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PhoneFrame
       objectReference: {fileID: 0}
+    - target: {fileID: 8043761395118707084, guid: eac4fac2df302b1418f21d3e0e20f5b4, type: 3}
+      propertyPath: m_Color.a
+      value: 0.78431374
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 537956870648803338, guid: eac4fac2df302b1418f21d3e0e20f5b4, type: 3}

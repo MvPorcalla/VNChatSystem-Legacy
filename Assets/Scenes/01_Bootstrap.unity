@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveFileName: player_data.json
-  createBackups: 1
+  createBackups: 0
   maxBackups: 3
   enableSaveThrottling: 1
   saveCooldown: 3

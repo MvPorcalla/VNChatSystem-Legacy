@@ -13,8 +13,7 @@ System: "7:05 AM"
 NPC: "Good morning! Or... good evening, depending on where you are?"
 NPC: "I just finished harvesting my morning dew."
 
->> media npc type:image path:sample_b_cg1
->> media npc type:image path:sample_b_cg1
+>> media npc type:image unlock:true path:ChatB_CG1
 
 -> ...
 
@@ -22,14 +21,17 @@ Player: "Morning here! What exactly is 'morning dew' harvesting?"
 Player: "It sounds like something from a fairy tale."
 
 NPC: "It is! We use the dew from the rare Moonpetal flowers for alchemy."
+
+>> media npc type:image unlock:true path:ChatB_CG2
+
 NPC: "But I wanted to ask you about something strange I saw in your world's 'Net'."
 
 >> choice
-    -> "What did you see?"
+    -> "What did you see? CG3"
         # Player: "Oh? What did you find on the internet?"
         <<jump C1_TheHerb>>
 
-    -> "How do you use the internet?"
+    -> "How do you use the internet? CG4"
         # Player: "Wait, you can browse the web from your world?"
         <<jump C1_TechTalk>>
 
@@ -45,7 +47,7 @@ title: C1_TheHerb
 NPC: "I saw a picture of a human eating... **Sacred Glimmerleaf**."
 NPC: "They were putting it on dough with crushed tomatoes and cheese."
 
->> media npc type:image path:sample_b_cg1
+>> media npc type:image unlock:true path:ChatB_CG3
 
 NPC: "Is this true? Do you just... eat our most potent, sacred herb?"
 NPC: "It's supposed to be reserved for rituals and powerful healing potions!"
@@ -99,7 +101,7 @@ Player: "Yes, we use it on almost everything—especially pizza."
 NPC: "Pizza? This is shocking! It's like grinding up a relic and sprinkling it on bread!"
 
 >> choice
-    -> "It tastes great!"
+    -> "It tastes great! CG4"
         # Player: "It's delicious! It has a slightly peppery, sweet taste."
         <<jump C1_TaliTries>>
 
@@ -119,7 +121,7 @@ title: C1_TaliTries
 NPC: "Hmm. I've only ever tasted it in its concentrated potion form. It tastes... vivid."
 NPC: "Perhaps in small doses, on this 'pizza'..."
 
->> media npc type:image path:sample_b_cg1
+>> media npc type:image unlock:true path:ChatB_CG4
 
 NPC: "I am an alchemist, after all. I should understand the properties of plants."
 NPC: "Tell me the precise recipe for this 'pizza'. For science, of course."

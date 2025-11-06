@@ -17,13 +17,18 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: dbfe6807277d30e4ba90cbd021119639
   m_SerializeEntries:
-  - m_GUID: 0932ad4de4ee65347bd277ad9c120942
-    m_Address: smp_cg2
+  - m_GUID: 08900f4960d66cd4fb80414e50162d46
+    m_Address: ChatB_CG4
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0d22124815df6904fad828042164fbe0
-    m_Address: Assets/Characters/sample_B/profile/sample_b_pf.png
+    m_Address: sample_b_pf
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 307f5f02b0288d04d8d7708f07149b90
+    m_Address: ChatA_CG5
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -32,18 +37,38 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 68fffb5317a9c7e478f2b37ce1f90031
-    m_Address: smp_cg3
+  - m_GUID: 35821ee647c36524d8a07f312ff0b97a
+    m_Address: ChatB_CG1
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8458de1db5f02f64cb3fe87068d9fda8
-    m_Address: smp_cg1
+  - m_GUID: 5677af4271d51514ebe5d7b022fa2739
+    m_Address: ChatA_CG3
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ee893029d4dce454cbd3a980c4647161
-    m_Address: sample_b_cg1
+  - m_GUID: 5bc2c6cbe5aba9242817c898192c99ee
+    m_Address: ChatB_CG3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7dbd3836db08cc545a2b736b74784189
+    m_Address: ChatA_CG2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a67003f7ae74333478279bdefedf375c
+    m_Address: ChatB_CG2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c80c251f3d8fe784b92dda1c423d8b55
+    m_Address: ChatA_CG1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1ffc2bbca45ffd43816d6a850760e72
+    m_Address: ChatA_CG4
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

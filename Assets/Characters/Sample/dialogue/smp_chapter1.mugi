@@ -14,7 +14,7 @@ NPC: "Hey there!"
 NPC: "I'm so glad we finally get to chat!"
 NPC: "I've been waiting to meet someone from your world."
 
->> media npc type:image path:smp_cg3
+>> media npc type:image unlock:true path:ChatA_CG1
 
 -> ...
 
@@ -25,11 +25,11 @@ NPC: "I know, right? It's like something out of a fantasy novel!"
 NPC: "Speaking of which... I have something amazing to show you."
 
 >> choice
-    -> "What is it?"
+    -> "What is it? CG2"
         # Player: "What is it? I'm curious!"
         <<jump C1_ShowMagic>>
 
-    -> "I'm a bit nervous..."
+    -> "I'm a bit nervous... CG3"
         # Player: "I'm a bit nervous... this is all so new to me."
         <<jump C1_Reassurance>>
 
@@ -45,7 +45,7 @@ title: C1_ShowMagic
 NPC: "Watch this!"
 NPC: "In my world, we can do things that seem impossible in yours."
 
->> media npc type:image path:smp_cg2
+>> media npc type:image unlock:true path:ChatA_CG2
 
 NPC: "That was just a simple light spell!"
 NPC: "There's so much more I could show you."
@@ -90,7 +90,7 @@ NPC: "How about we start with something simple?"
 NPC: "Want to see a little magic? Nothing scary, I promise!"
 
 >> choice
-    -> "Okay, show me"
+    -> "Okay, show me CG3"
         # Player: "Okay, I trust you. Show me some magic."
         <<jump C1_GentleMagic>>
 
@@ -168,7 +168,7 @@ title: C1_GentleMagic
 NPC: "Perfect! Let me show you something really gentle."
 NPC: "I'm just going to create some flower petals..."
 
->> media npc type:image path:smp_cg1
+>> media npc type:image unlock:true path:ChatA_CG3
 
 NPC: "See? Just beautiful flower petals floating in the air."
 NPC: "Nothing scary at all!"
