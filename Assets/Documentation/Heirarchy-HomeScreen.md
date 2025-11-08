@@ -33,51 +33,53 @@ Canvas
     │   │           │   └── AppIcon (Image, LE)      
     │   │           └── AppName (Text, LE)
     │   │   
-    │   └── GalleryContainer
-    │       ├── GalleryPanel
-    │       │   ├── GalleryHeader
-    │       │   │   ├── TitleText
-    │       │   │   ├── ProgressText
-    │       │   │   ├── Icon-search
-    │       │   │   └── Ivon-3Dot
-    │       │   └── ScrollView
-    │       │       └── Viewport
-    │       │           └── Content (Vertical Layout Group)
-    │       │               └── CGContainer (Vertical Layout Group) (Prefab)
-    │       │                   ├── CGName (TextMeshProUGUI)       // e.g. "Emma — 2/4"
-    │       │                   └── CGGrid (Grid Layout Group - 4 per cell) 
-    │       │                        └── CGSlot (200x200) (Prefab)
-    │       │                            └─ CropContainer
-    │       │                                ├─ RectTransform:
-    │       │                                │   ├─ Anchors: Stretch (0,0,1,1)
-    │       │                                │   ├─ Left: 0, Top: 0, Right: 0, Bottom: 0
-    │       │                                ├─ Mask:
-    │       │                                │   └─ Show Mask Graphic: ❌ UNCHECKED
-    │       │                                ├─ Image:
-    │       │                                │   ├─ Color: White (255, 255, 255, 255) ← IMPORTANT!
-    │       │                                │   ├─ Source Image: None (leave empty)
-    │       │                                │   └─ Raycast Target: ❌ (optional)
-    │       │                                └─ CGImage (child)
-    │       │                                    ├─ RectTransform:
-    │       │                                    │   ├─ Anchors: Middle-Center (0.5, 0.5)
-    │       │                                    │   ├─ Pivot: (0.5, 1.0) ← Top-center
-    │       │                                    │   ├─ Width: 200
-    │       │                                    │   ├─ Height: 360
-    │       │                                    │   ├─ Pos X: 0
-    │       │                                    │   ├─ Pos Y: 0
-    │       │                                    └─ Image:
-    │       │                                        ├─ Source Image: (test sprite - 9:16 portrait)
-    │       │                                        ├─ Color: White (255, 255, 255, 255)
-    │       │                                        ├─ Image Type: Simple
-    │       │                                        ├─ Preserve Aspect: ✅ TRUE
-    │       │                                        └─ Raycast Target: ✅ TRUE
-    │       └── GalleryFullView
-    │           ├── BGOverly            // BG
-    │           ├── CGHeader
-    │           │   ├── CloseButton
-    │           │   └── CGName          // NPC name
-    │           └── CGDisplay
-    │               └── CGImage         // CG full view
+    │   ├── GalleryPanelContainer
+    │   │   ├── GalleryPanel
+    │   │   │   ├── GalleryHeader
+    │   │   │   │   ├── TitleText
+    │   │   │   │   ├── ProgressText
+    │   │   │   │   ├── Icon-search
+    │   │   │   │   └── Ivon-3Dot
+    │   │   │   └── ScrollView
+    │   │   │       └── Viewport
+    │   │   │           └── Content (Vertical Layout Group)
+    │   │   │               └── CGContainer (Vertical Layout Group) (Prefab)
+    │   │   │                   ├── CGName (TextMeshProUGUI)       // e.g. "Emma — 2/4"
+    │   │   │                   └── CGGrid (Grid Layout Group - 4 per cell) 
+    │   │   │                        └── CGSlot (200x200) (Prefab)
+    │   │   │                            └─ CropContainer
+    │   │   │                                ├─ RectTransform:
+    │   │   │                                │   ├─ Anchors: Stretch (0,0,1,1)
+    │   │   │                                │   ├─ Left: 0, Top: 0, Right: 0, Bottom: 0
+    │   │   │                                ├─ Mask:
+    │   │   │                                │   └─ Show Mask Graphic: ❌ UNCHECKED
+    │   │   │                                ├─ Image:
+    │   │   │                                │   ├─ Color: White (255, 255, 255, 255) ← IMPORTANT!
+    │   │   │                                │   ├─ Source Image: None (leave empty)
+    │   │   │                                │   └─ Raycast Target: ❌ (optional)
+    │   │   │                                └─ CGImage (child)
+    │   │   │                                    ├─ RectTransform:
+    │   │   │                                    │   ├─ Anchors: Middle-Center (0.5, 0.5)
+    │   │   │                                    │   ├─ Pivot: (0.5, 1.0) ← Top-center
+    │   │   │                                    │   ├─ Width: 200
+    │   │   │                                    │   ├─ Height: 360
+    │   │   │                                    │   ├─ Pos X: 0
+    │   │   │                                    │   ├─ Pos Y: 0
+    │   │   │                                    └─ Image:
+    │   │   │                                        ├─ Source Image: (test sprite - 9:16 portrait)
+    │   │   │                                        ├─ Color: White (255, 255, 255, 255)
+    │   │   │                                        ├─ Image Type: Simple
+    │   │   │                                        ├─ Preserve Aspect: ✅ TRUE
+    │   │   │                                        └─ Raycast Target: ✅ TRUE
+    │   │   └── GalleryFullView
+    │   │       ├── BGOverly            // BG
+    │   │       ├── CGHeader
+    │   │       │   ├── CloseButton
+    │   │       │   └── CGName          // NPC name
+    │   │       └── CGDisplay
+    │   │           └── CGImage         // CG full view
+    │   │
+    │   ├── ...(future App Panels)
     │
     └── PhoneButtons                       // Fake Android/iOS-like navigation buttons at the bottom
         ├── BackButton                     // Simulates a back button

@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 206137055}
   - component: {fileID: 206137056}
   m_Layer: 5
-  m_Name: GalleryContainer
+  m_Name: GalleryPanelContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3101,20 +3101,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3246637079d39e498b045f410355182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  appLinks:
-  - appButton: {fileID: 3253269346956914297}
-    targetPanel: {fileID: 223569690}
-    panelName: Gallery
-  - appButton: {fileID: 1793673874}
-    targetPanel: {fileID: 1560069216}
-    panelName: Contacts
-  - appButton: {fileID: 14475685}
-    targetPanel: {fileID: 760633744}
-    panelName: Setting
-  defaultPanel: {fileID: 676737777}
+  homeScreenPanel: {fileID: 676737777}
   backButton: {fileID: 7725668184292529178}
   homeButton: {fileID: 724666779}
-  galleryFullView: {fileID: 323715188}
+  appLinks:
+  - enabled: 1
+    appButton: {fileID: 3253269346956914297}
+    targetPanel: {fileID: 223569690}
+    panelName: Gallery
+    hideButtonWhenDisabled: 1
+  - enabled: 1
+    appButton: {fileID: 1793673874}
+    targetPanel: {fileID: 1560069216}
+    panelName: Contacts
+    hideButtonWhenDisabled: 1
+  - enabled: 1
+    appButton: {fileID: 14475685}
+    targetPanel: {fileID: 760633744}
+    panelName: Setting
+    hideButtonWhenDisabled: 1
+  overlayPanels:
+  - {fileID: 323715188}
+  enableDebugLogs: 1
+  autoHideDisabledButtons: 1
 --- !u!1 &1390355585
 GameObject:
   m_ObjectHideFlags: 0

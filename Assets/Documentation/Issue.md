@@ -104,3 +104,91 @@ and this code is my fix for this problem do you think i did it rigjt with no mor
 > ```
 
 > How should I structure the save/load flow so CGs unlock in chat and appear in the gallery persistently?
+
+---
+
+Chatmanager.cs, ChatDisplayManager.cs, ChatFlowController.cs, MugiParser.cs, PlayerSaveManager.cs, DialogueSaveManager.cs, BaseSaveManager.cs MessageData.cs, PlayerData.cs
+
+Got it. You want a **CG unlocking system** for your VN chat game that tracks unlockable CGs from your `.mugi` dialogue files and persists them in a separate JSON. Here’s how I would approach it and how to prompt it clearly for implementation:
+
+---
+
+### Prompt for CG Unlock System Implementation
+
+**Goal:**
+Implement a `CGSaveManager` that tracks unlockable CGs for each NPC/chat, reads `.mugi` files for unlockable CG tags, and saves them to a dedicated JSON file like this:
+
+```json
+"unlockedCGsByChat": [
+  {
+    "chatID": "ae30dd_sample_NPC",
+    "unlockedCGs": ["smp_cg3", "smp_cg2"]
+  }
+]
+```
+
+**Mugi File Rules:**
+
+* Unlockable CG: `>> media npc type:image unlock:true path:smp_cg2`
+* Normal CG: `>> media npc type:image path:smp_cg2`
+
+**Requirements:**
+
+1. Parse `.mugi` files to detect `unlock:true` CGs.
+2. When the player reaches a line with `unlock:true`, mark the CG as unlocked for that chatID.
+3. Persist unlocked CGs to a separate JSON (`CGSave.json`) via `CGSaveManager`.
+4. Provide public methods for:
+
+   * Checking if a CG is unlocked.
+   * Getting all unlocked CGs per NPC/chat.
+   * Saving & loading from JSON.
+5. Optional: Support multiple playthroughs where branch-specific CGs unlock independently.
+
+**Example Methods in `CGSaveManager`:**
+
+```csharp
+public void UnlockCG(string chatID, string cgID); // unlocks and saves
+public bool IsCGUnlocked(string chatID, string cgID); // returns true/false
+public List<string> GetUnlockedCGs(string chatID); // returns all unlocked CGs for a chat
+```
+
+**Additional Notes:**
+
+* Keep the system lightweight (~2–6KB JSON).
+* Decouple from PlayerSaveManager.
+* Support future features like achievements or gallery progress.
+
+---
+
+```json
+  {
+    "chatID": "9429c5_sample_b",
+    "state": {
+      "version": 1,
+      "chatID": "9429c5_sample_b",      <- reset
+      "characterName": "sample_b",      <- reset
+      "currentChapterIndex": 0,         <- reset
+      "currentNodeName": "C1_Start",    <- reset
+      "currentMessageIndex": 4,         <- reset
+      "readMessageIds": [],             <- reset
+      "chatHistory": [],                <- reset
+      "unlockedCGs": [                  <- Keep as i need this for Gallery unlocks CG
+        "ChatB_CG1",
+        "ChatB_CG2"
+      ],
+      "isInPauseState": true
+    }
+  }
+```
+
+### **Generated UI:**
+```
+Gallery: 3/6 (50%)               ← stats text
+
+╔════════════════════════════════╗
+║ Emma — 2/4                     ║  ← dynamically populated
+║ [✓] [🔒] [✓] [🔒]             ║  ← CG grid
+╠════════════════════════════════╣
+║ Sarah — 1/2                    ║
+║ [✓] [🔒]                       ║
+╚════════════════════════════════╝
