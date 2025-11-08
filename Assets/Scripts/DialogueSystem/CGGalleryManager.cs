@@ -63,6 +63,7 @@ namespace ChatDialogueSystem
 
             if (closeButton != null)
             {
+                closeButton.onClick.RemoveAllListeners(); // Clear existing listeners
                 closeButton.onClick.AddListener(CloseFullView);
             }
         }
@@ -371,8 +372,19 @@ namespace ChatDialogueSystem
                 return;
             }
 
+            // ✅ TELL HOMEPANELMANAGER ABOUT THE OVERLAY
+            if (HomePanelManager.Instance != null)
+            {
+                HomePanelManager.Instance.OpenOverlay(fullViewPanel);
+            }
+            else
+            {
+                // Fallback if no HomePanelManager (shouldn't happen in your setup)
+                fullViewPanel.SetActive(true);
+                LogWarning(Category.ChatManager, "HomePanelManager not found! Navigation won't work properly.");
+            }
+
             StartCoroutine(LoadFullViewSprite(cgPath));
-            fullViewPanel.SetActive(true);
 
             if (cgTitleText != null)
             {
@@ -414,8 +426,20 @@ namespace ChatDialogueSystem
 
         private void CloseFullView()
         {
-            if (fullViewPanel != null)
+            if (fullViewPanel == null) return;
+
+            // ✅ TELL HOMEPANELMANAGER TO CLOSE THE OVERLAY
+            if (HomePanelManager.Instance != null)
+            {
+                HomePanelManager.Instance.CloseOverlay(fullViewPanel);
+            }
+            else
+            {
+                // Fallback if no HomePanelManager
                 fullViewPanel.SetActive(false);
+            }
+
+            Log(Category.ChatManager, "[CGGallery] Closed full view");
         }
 
         // ═══════════════════════════════════════════════════════════
