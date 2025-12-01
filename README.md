@@ -1,4 +1,19 @@
-### **VNChatSystem-Base**
+# **VNChatSystem-Base**
+
+## Contact & Permissions
+
+Hi there! 👋  
+
+If you'd like to **use, reference, or contribute** to this project, please feel free to reach out. I’m happy to discuss ideas, collaborations, or just chat about the project.  
+
+You can contact me via:
+
+- Email: scryptid1@gmail.com  
+- GitHub: [MvPorcalla](https://github.com/MvPorcalla)  
+
+Please note: All rights reserved. Do not redistribute or claim this work as your own without permission.
+
+---
 
 A modular and reusable **Visual Novel Chat System** built in Unity — designed for messenger-style narrative games.
 This base project handles chat UI, message virtualization, object pooling, and data management — making it the foundation for developing interactive story-driven chat experiences.
