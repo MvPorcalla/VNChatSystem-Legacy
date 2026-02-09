@@ -3,7 +3,19 @@
 A modular and reusable **Visual Novel Chat System** built in Unity — designed for messenger-style narrative games.
 This base project handles chat UI, message virtualization, object pooling, and data management — making it the foundation for developing interactive story-driven chat experiences.
 
-Depricated
+> ⚠️ **DEPRECATED**
+>
+> This repository is no longer maintained.
+>  
+> **Active development has moved to:**  
+> 👉 
+>
+> This repo is kept for reference only and may contain outdated or broken code.
+
+This repository is no longer maintained.
+
+➡ **New repository:** https://github.com/YourUsername/VNChatSystem-Base
+
 
 **Features:**
 
