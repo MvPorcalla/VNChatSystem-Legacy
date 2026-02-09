@@ -3,6 +3,8 @@
 A modular and reusable **Visual Novel Chat System** built in Unity — designed for messenger-style narrative games.
 This base project handles chat UI, message virtualization, object pooling, and data management — making it the foundation for developing interactive story-driven chat experiences.
 
+Depricated
+
 **Features:**
 
 * Messenger-style chat interface
