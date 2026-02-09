@@ -10,7 +10,7 @@ This base project handles chat UI, message virtualization, object pooling, and d
 > This repository is no longer maintained.
 >  
 > **Active development has moved to:**  
-> 👉 
+> 👉 https://github.com/MvPorcalla/VNChatSystem-Base.git
 >
 > This repo is kept for reference only and may contain outdated or broken code.
 
